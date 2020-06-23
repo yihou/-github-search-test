@@ -5,5 +5,15 @@
   "repository": "git@github.com:yihou/github-search-test.git",
   "author": "Yi Hou <looyihou91@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "client-build": "yarn workspace client build",
+    "client-start": "yarn workspace client start"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "lerna": "^3.22.1"
+  }
 }
