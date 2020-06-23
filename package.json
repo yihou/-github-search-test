@@ -1,0 +1,9 @@
+{
+  "name": "github-search-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:yihou/github-search-test.git",
+  "author": "Yi Hou <looyihou91@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
