@@ -1809,6 +1809,11 @@
     is-plain-object "^3.0.0"
     universal-user-agent "^5.0.0"
 
+"@octokit/graphql-schema@^8.13.0":
+  version "8.13.0"
+  resolved "https://registry.yarnpkg.com/@octokit/graphql-schema/-/graphql-schema-8.13.0.tgz#8124062941ed994ba227c8daf647df65492a1166"
+  integrity sha512-MMEG0pBNSDX6oihLzMWp8DcIU3xfwhP4syRBbJN5J3tHa4AvxMD6aR3hCO8A80cWj2K9QYZRf4fDN4B8W2ADfw==
+
 "@octokit/graphql@^4.5.1":
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-4.5.1.tgz#162aed1490320b88ce34775b3f6b8de945529fa9"
