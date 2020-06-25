@@ -1,16 +1,6 @@
 import {GraphQlResponse} from '@octokit/graphql/dist-types/types';
 import {githubGraphQuery} from '../utils/github';
-
-interface SearchParams {
-    query: string;
-    topic?: string;
-    language?: string;
-}
-
-interface SearchItem {
-    id: string;
-    name: string;
-}
+import {SearchItem, SearchParams} from '../../../types/search';
 
 interface SearchResponseData {
     search: {
@@ -43,9 +33,6 @@ export class Search {
               endCursor
               hasNextPage
               hasPreviousPage
-            }
-            edges {
-                textMatches
             }
         }
       }

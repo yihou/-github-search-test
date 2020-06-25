@@ -1,22 +1,25 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import {Search} from './services/Search';
+import {SearchParams} from '../../types/search';
+import {env} from './utils/env';
 
 const app: express.Application = express();
 
 const main = async () => {
     const searchService = new Search();
 
-    app.listen(3001, () => {
+    app.use(cors({
+        origin: '*',
+    }));
+
+    app.listen(env.parsed.SERVER_PORT, () => {
         console.log(`Server started`);
     });
 
-    app.post('/search', async function (req, res) {
+    app.post<any, any, any, SearchParams>('/search', async function (req, res) {
         try {
-            const searchResponse = await searchService.search({
-                query: req.query.query as string,
-                language: req.query.language as string,
-                topic: req.query.topic as string,
-            });
+            const searchResponse = await searchService.search(req.query);
 
             res.json(searchResponse.search);
         } catch (e) {
