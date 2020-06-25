@@ -1,12 +1,7 @@
 import * as React from 'react';
-import { Button } from 'baseui/button';
 import {Layout} from '../components/Layout';
-import {Centered} from '../components/Centered';
-import {FormControl} from 'baseui/form-control';
-import {Combobox} from 'baseui/combobox';
 import {styled} from 'baseui';
-
-type OptionT = {label: string; id: string};
+import {OptionT, SearchForm} from '../components/SerachForm';
 
 export const Container = styled('div', {
     paddingTop: '20px',
@@ -30,35 +25,14 @@ const Index: React.FC = () =>  {
 
     return (
         <Layout>
-            <Centered>
-                <Container>
-                    <form>
-                        <div>
-                            <FormControl
-                                label="Search Github Repos.."
-                                caption="Start typing..."
-                            >
-                                <Combobox
-                                    value={value}
-                                    onChange={handleOnChange}
-                                    mapOptionToString={mapOptionToString}
-                                    options={[]}
-                                    name="search"
-                                    size="compact"
-                                />
-                            </FormControl>
-                        </div>
-                        <div>
-                            <Button
-                                onClick={handleOnSearch}
-                                size="compact"
-                            >
-                                Search
-                            </Button>
-                        </div>
-                    </form>
-                </Container>
-            </Centered>
+            <Container>
+                <SearchForm
+                    value={value}
+                    onChange={handleOnChange}
+                    mapOptionToString={mapOptionToString}
+                    onClick={handleOnSearch}
+                />
+            </Container>
         </Layout>
     );
 };
