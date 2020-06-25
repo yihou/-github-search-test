@@ -5,7 +5,8 @@
     "jsx": "preserve",
     "lib": [
       "dom",
-      "es2017"
+      "dom.iterable",
+      "esnext"
     ],
     "module": "esnext",
     "moduleResolution": "node",

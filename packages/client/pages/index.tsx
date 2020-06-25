@@ -1,16 +1,65 @@
 import * as React from 'react';
-import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
+import {Layout} from '../components/Layout';
+import {Centered} from '../components/Centered';
+import {FormControl} from 'baseui/form-control';
+import {Combobox} from 'baseui/combobox';
+import {styled} from 'baseui';
+
+type OptionT = {label: string; id: string};
+
+export const Container = styled('div', {
+    paddingTop: '20px',
+    width: '80vw',
+});
 
 const Index: React.FC = () =>  {
+    const [value, setValue] = React.useState<string>('');
 
-    const [css, theme] = useStyletron();
+    function mapOptionToString(option: OptionT): string {
+        return option.label;
+    }
+
+    function handleOnChange(value) {
+        setValue(value);
+    }
+
+    function handleOnSearch() {
+
+    }
 
     return (
-        <>
-            <Button onClick={() => console.log("Boilerplate")}>Log Text</Button>
-            <p className={css({ color: theme.colors.accent600 })}> Hello!</p>
-        </>
+        <Layout>
+            <Centered>
+                <Container>
+                    <form>
+                        <div>
+                            <FormControl
+                                label="Search Github Repos.."
+                                caption="Start typing..."
+                            >
+                                <Combobox
+                                    value={value}
+                                    onChange={handleOnChange}
+                                    mapOptionToString={mapOptionToString}
+                                    options={[]}
+                                    name="search"
+                                    size="compact"
+                                />
+                            </FormControl>
+                        </div>
+                        <div>
+                            <Button
+                                onClick={handleOnSearch}
+                                size="compact"
+                            >
+                                Search
+                            </Button>
+                        </div>
+                    </form>
+                </Container>
+            </Centered>
+        </Layout>
     );
 };
 

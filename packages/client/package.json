@@ -8,7 +8,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "antd": "^4.3.5",
     "baseui": "^9.84.1",
     "next": "9.4.4",
     "react": "16.13.1",
