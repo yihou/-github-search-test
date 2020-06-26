@@ -110,4 +110,4 @@ dist
 graphql
 
 # docker volumes
-.docker
+.docker/mongodb/data

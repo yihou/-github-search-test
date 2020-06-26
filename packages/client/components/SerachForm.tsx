@@ -61,10 +61,7 @@ export function SearchForm(props: SearchFormParams) {
                     value={searchStr}
                     onChange={handleOnChange}
                     mapOptionToString={(option) => option.label}
-                    mapOptionToNode={({option}) => {
-                        console.log(option)
-                        return option.label;
-                    }}
+                    mapOptionToNode={({option}) => option.label}
                     options={autoCompleteList}
                     name={`repo_search_${hashId}`}
                     size="compact"

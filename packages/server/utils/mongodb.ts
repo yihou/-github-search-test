@@ -6,7 +6,7 @@ import {SearchResult} from '../models/SearchResult';
 /**
  * MongoDB Server
  **/
-const mongodbUrl = `mongodb://localhost:${env.parsed.DATABASE_PORT}`
+const mongodbUrl = `mongodb://localhost:${env.parsed.DATABASE_PORT}/${env.parsed.DATABASE_NAME}`
 
 export async function dbConnect() {
     try {
