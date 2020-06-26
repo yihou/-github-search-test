@@ -27,9 +27,16 @@ export class SearchController {
     static async search(req: Request<any, any, any, SearchParams>, res) {
         const searchService = new Search();
 
+        if (!req.query.query) {
+            return res.json({
+                nodes: [],
+            });
+        }
+
         try {
             const searchResponse = await searchService.search(req.query);
-            res.json(searchResponse.search);
+
+            console.log(searchResponse.search);
 
             // after responded, index queries and search results
             const resultList = await Promise.all(searchResponse.search.nodes.map<Promise<ISearchResultType>>(async (node) => {
@@ -58,7 +65,10 @@ export class SearchController {
                     searchResult: resultList,
                 });
             }
+
+            res.json(searchResponse.search);
         } catch (e) {
+            console.log(e);
             res.json(e);
         }
     }
