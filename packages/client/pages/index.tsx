@@ -5,6 +5,11 @@ import {SearchForm} from '../components/SerachForm';
 import {useApi} from '../hooks/useApi';
 import {SearchParams} from '../../../types/search';
 import {Card} from 'baseui/card';
+import {Cell, Grid} from 'baseui/layout-grid';
+import {OnChangeParams, Value} from 'baseui/select';
+import {useState} from 'react';
+import {Checkbox} from 'baseui/checkbox';
+import {LanguageSelect} from '../components/LanguageSelect';
 
 export const Container = styled('div', {
     paddingTop: '20px',
@@ -18,10 +23,14 @@ export const Container = styled('div', {
 
 export const RepoList = styled('div', {
     marginTop: '20px',
+    marginBottom: '20px',
 });
 
 const Index: React.FC = () =>  {
-    const {data: searchResponse, callApi: searchApi} = useApi<SearchParams, any, any>({
+    const [searchParams, setSearchParams] = useState<SearchParams>({query: ''});
+    const [selectedLanguage, setSelectedLanguage] = useState<Value>();
+
+    const {data: searchResponse, debouncedCallApi: searchApi} = useApi<SearchParams, any, any>({
         url: '/search',
         method: 'post',
         initialState: {
@@ -37,33 +46,61 @@ const Index: React.FC = () =>  {
     });
     const repositoryList = searchResponse.nodes;
 
-    const [value, setValue] = React.useState<string>('');
-
-    function handleOnChange(value) {
-        setValue(value);
+    function startSearch(updatedParams: SearchParams) {
+        const newSearchParams = {
+            ...searchParams,
+            ...updatedParams,
+        };
+        setSearchParams(newSearchParams);
+        searchApi(newSearchParams);
     }
 
-    function handleOnSearch() {
-        searchApi({
-            query: 'covid19',
-        });
+
+    function handleOnSearch(value: string) {
+        startSearch({query: value});
+    }
+
+    function handleOnSelect(param: OnChangeParams) {
+        console.log(param.value);
+        setSelectedLanguage(param.value);
     }
 
     return (
         <Layout>
             <Container>
-                <SearchForm
-                    value={value}
-                    onChange={handleOnChange}
-                    onSubmit={handleOnSearch}
-                />
-                <RepoList>
-                    {repositoryList.map(repo => (
-                        <Card key={repo.id}>
-                            {repo.name}
-                        </Card>
-                    ))}
-                </RepoList>
+                <Grid>
+                    <Cell span={[1, 2, 3]}>
+                        <div>
+                            <h3 style={{marginTop: 8}}>Search by: </h3>
+                            <label style={{display: 'flex'}}>
+                                <Checkbox/>
+                                <span>Topic</span>
+                            </label>
+                        </div>
+                        <div style={{display: 'flex'}}>
+                            <Checkbox/>
+                            <div style={{width: '100%'}}>
+                                <LanguageSelect
+                                    value={selectedLanguage}
+                                    onSelect={handleOnSelect}
+                                />
+                            </div>
+                        </div>
+                    </Cell>
+                    <Cell span={[3, 6, 9]}>
+                        <SearchForm onSearch={handleOnSearch} />
+                        <RepoList>
+                            {repositoryList.map(repo => (
+                                <div key={repo.id} style={{marginBottom: '10px'}}>
+                                    <Card>
+                                        {repo.name}
+                                    </Card>
+                                </div>
+                            ))}
+                        </RepoList>
+                    </Cell>
+                </Grid>
+
             </Container>
         </Layout>
     );

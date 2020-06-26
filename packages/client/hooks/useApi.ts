@@ -3,6 +3,7 @@ import {useFirstMountState} from 'react-use';
 import {ApiCallbacks} from '../types/ajax';
 import {ajax} from '../utils/ajax';
 import {AxiosResponse} from 'axios';
+import {Dict} from '../../../types/general';
 
 interface UseApiState<Params, Data> {
     loading?: boolean;
@@ -21,6 +22,7 @@ interface UseApiConfig<Params, Data, Response> {
     transformer?: (response: AxiosResponse<Response>) => Data;
 }
 
+let timeout: Dict<NodeJS.Timeout> = {};
 export function useApi<Params, Data, Response>({
                            url,
                            initialState = {},
@@ -58,6 +60,12 @@ export function useApi<Params, Data, Response>({
         callApi(initialState.params);
     }
 
+    const debouncedCallApi = (...args) => {
+        clearTimeout(timeout[url]);
+        timeout[url] = setTimeout(function () {
+            callApi(...args);
+        }, 500);
+    }
 
     useEffect(() => {
         if (!loading || requestId === 0) {
@@ -111,5 +119,6 @@ export function useApi<Params, Data, Response>({
         setLoaded,
 
         callApi,
+        debouncedCallApi,
     };
 }

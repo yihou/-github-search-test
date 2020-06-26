@@ -1,24 +1,30 @@
 import {SearchIndex} from '../models/SearchIndex';
 import {ISearchResultType, SearchResult} from '../models/SearchResult';
 import {Search} from '../services/Search';
+import {Request} from 'express';
+import {SearchParams} from '../../../types/search';
 
 export class SearchController {
-    static async autoComplete(req, res) {
+    static async autoComplete(req: Request<any, any, any, SearchParams>, res) {
+        if (!req.query.query) {
+            res.json([]);
+
+            return;
+        }
+
         try {
-            const searchIndex = await SearchIndex.find({
-                title: {
+            const searchIndexList = await SearchIndex.find({
+                searchString: {
                     '$regex': req.query.query,
                 },
             });
-            console.log(searchIndex);
-
-            res.json(searchIndex);
+            res.json(searchIndexList.map<string>(searchIndex => searchIndex.searchString));
         } catch (e) {
             res.json(e);
         }
     }
 
-    static async search(req, res) {
+    static async search(req: Request<any, any, any, SearchParams>, res) {
         const searchService = new Search();
 
         try {
@@ -41,11 +47,17 @@ export class SearchController {
                 return result._id;
             }));
 
-            await SearchIndex.create({
+            let searchIndex = await SearchIndex.findOne({
                 searchString: req.query.query,
-                createdAt: new Date(),
-                searchResult: resultList,
             });
+
+            if (!searchIndex) {
+                await SearchIndex.create({
+                    searchString: req.query.query,
+                    createdAt: new Date(),
+                    searchResult: resultList,
+                });
+            }
         } catch (e) {
             res.json(e);
         }

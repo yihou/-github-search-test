@@ -19,7 +19,6 @@ const main = async () => {
     });
 
     app.get<any, any, any, SearchParams>('/search-autocomplete', SearchController.autoComplete);
-
     app.post<any, any, any, SearchParams>('/search', SearchController.search);
 };
 

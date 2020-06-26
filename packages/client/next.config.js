@@ -1,8 +1,8 @@
 const withPlugins = require('next-compose-plugins')
 const withImages = require('next-images')
-import {config} from 'dotenv';
+const {config} = require('dotenv');
 
-export const env = config({
+config({
     path: '../../.env',
 });
 
