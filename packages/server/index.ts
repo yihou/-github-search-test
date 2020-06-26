@@ -7,6 +7,7 @@ import {SearchParams} from '../../types/search';
 import {SearchController} from './controllers/SearchController';
 import {AuthController} from './controllers/AuthController';
 import {jwtStrategy} from './utils/passport';
+import {ReportController} from './controllers/ReportController';
 
 const app: express.Application = express();
 
@@ -27,6 +28,11 @@ const main = async () => {
     app.post<any, any, any, SearchParams>('/search', SearchController.search);
 
     app.post<any, any, any, SearchParams>('/login', AuthController.login);
+    app.get<any, any, any, SearchParams>(
+        '/report/search-list',
+        passport.authenticate('jwt'),
+        ReportController.searchIndexList
+    );
 };
 
 // noinspection JSIgnoredPromiseFromCall
