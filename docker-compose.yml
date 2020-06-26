@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+    mongodb:
+        container_name: github_search_mongodb
+        image: mongo
+        environment:
+            MONGO_INITDB_DATABASE: ${DATABASE_NAME}
+            MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+        ports:
+            - ${DATABASE_PORT}:27017
+        volumes:
+            - ./.docker/db:/data/db
+        networks:
+            - db
+        restart: always
+
+networks:
+    db:
+        driver: 'bridge'

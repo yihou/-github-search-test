@@ -108,3 +108,6 @@ dist
 
 # graphql schema
 graphql
+
+# docker volumes
+.docker
