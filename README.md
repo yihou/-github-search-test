@@ -17,7 +17,9 @@ Below are the required software to build and run the program.
     ```shell script
     cp .env.example .env
     ```
-1. Start Mongodb Docker
+1. Go to [github](https://github.com/settings/tokens), 
+generate token and paste it in .env `GITHUB_ACCESS_TOKEN`
+1. Start Mongodb Docker (optional if using locally installed mongodb)
     ```shell script
     docker-compose up -d
     ```
@@ -33,7 +35,6 @@ Below are the required software to build and run the program.
     ```shell script
     yarn client-start
     ```
-
 
 ## Progress
 Pending features to be done
