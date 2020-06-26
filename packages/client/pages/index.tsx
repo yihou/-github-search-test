@@ -10,16 +10,7 @@ import {OnChangeParams, Value} from 'baseui/select';
 import {useState} from 'react';
 import {Checkbox} from 'baseui/checkbox';
 import {LanguageSelect} from '../components/LanguageSelect';
-
-export const Container = styled('div', {
-    paddingTop: '20px',
-    paddingLeft: '15px',
-    paddingRight: '15px',
-    width: '80vw',
-    maxWidth: '768px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-});
+import {Container} from '../components/Container';
 
 export const RepoList = styled('div', {
     marginTop: '20px',

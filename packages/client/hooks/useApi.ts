@@ -5,17 +5,18 @@ import {ajax} from '../utils/ajax';
 import {AxiosResponse} from 'axios';
 import {Dict} from '../../../types/general';
 
-interface UseApiState<Params, Data> {
+interface UseApiState<Payload, Data> {
     loading?: boolean;
     loaded?: boolean;
-    params?: Params;
+    payload?: Payload;
     data?: Data;
 }
 
-interface UseApiConfig<Params, Data, Response> {
+interface UseApiConfig<Payload, Data, Response> {
     url: string;
-    initialState?: UseApiState<Params, Data>;
+    initialState?: UseApiState<Payload, Data>;
     fetchOnMount?: boolean;
+    isForm?: boolean; // if its true, put payload to data instead
     method?: 'get' | 'post';
     onSuccess?: (response: Response | any) => any;
     onError?: (err) => any;
@@ -23,31 +24,32 @@ interface UseApiConfig<Params, Data, Response> {
 }
 
 let timeout: Dict<NodeJS.Timeout> = {};
-export function useApi<Params, Data, Response>({
+export function useApi<Payload, Data, Response>({
                            url,
                            initialState = {},
                            fetchOnMount = false,
+                           isForm = false,
                            method = 'get',
                            onSuccess,
                            onError,
                            transformer = (response: any) => response.data,
-                       }: UseApiConfig<Params, Data, Response>) {
+                       }: UseApiConfig<Payload, Data, Response>) {
     const defaultCallBacks = {
         onSuccess,
         onError,
     };
     const firstMount = useFirstMountState();
     const [requestId, setRequestId] = useState(0);
-    const [params, setParams] = useState(initialState.params);
+    const [payload, setPayload] = useState(initialState.payload);
     const [callbacks, setCallbacks] = useState(defaultCallBacks);
     const [data, setData] = useState(initialState.data);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(initialState.loading || false);
     const [loaded, setLoaded] = useState(initialState.loaded || false);
 
-    function callApi(params?: Params, customCallbacks?: ApiCallbacks) {
+    function callApi(payload?: Payload, customCallbacks?: ApiCallbacks) {
         setLoading(true);
-        setParams(params);
+        setPayload(payload);
         // update callback function
         setCallbacks({
             ...defaultCallBacks,
@@ -57,7 +59,7 @@ export function useApi<Params, Data, Response>({
     }
 
     if (firstMount && fetchOnMount) {
-        callApi(initialState.params);
+        callApi(initialState.payload);
     }
 
     const debouncedCallApi = (...args) => {
@@ -75,7 +77,8 @@ export function useApi<Params, Data, Response>({
         ajax({
             url,
             method,
-            params,
+            params: isForm ? undefined : payload,
+            data: isForm ? payload : undefined,
         }).then(function (response) {
             if (typeof callbacks.onSuccess === 'function') {
                 callbacks.onSuccess(response);
