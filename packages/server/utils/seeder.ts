@@ -1,5 +1,4 @@
 import {User} from '../models/User';
-import * as bcrypt from 'bcrypt-nodejs';
 
 export async function dbSeeder() {
     const user = await User.findOne({
@@ -9,7 +8,7 @@ export async function dbSeeder() {
     if (!user) {
         await User.create({
             email: 'admin@sample.com',
-            password: bcrypt.genSaltSync(123123),
+            password: '123123',
         });
     }
 }
