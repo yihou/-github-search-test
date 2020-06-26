@@ -2,6 +2,8 @@ import * as mongoose from 'mongoose';
 import {env} from './env';
 import {SearchIndex} from '../models/SearchIndex';
 import {SearchResult} from '../models/SearchResult';
+import {User} from '../models/User';
+import {dbSeeder} from './seeder';
 
 /**
  * MongoDB Server
@@ -22,8 +24,12 @@ export async function dbConnect() {
             }
         );
 
+        await User.createCollection();
         await SearchIndex.createCollection();
         await SearchResult.createCollection();
+
+        // noinspection ES6MissingAwait
+        dbSeeder();
     } catch (err) {
         console.error('mongodb connection error:');
         console.error(err);

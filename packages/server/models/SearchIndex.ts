@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import * as mongoosePaginate from 'mongoose-paginate';
 import {Document, Schema} from 'mongoose';
 import {ISearchResultType} from './SearchResult';
 
@@ -13,5 +14,7 @@ const SearchIndexSchema = new mongoose.Schema({
     createdAt: {type: Date, required: true, default: new Date()},
     searchString: {type: String, required: true, default: null},
 });
+
+SearchIndexSchema.plugin(mongoosePaginate);
 
 export const SearchIndex = mongoose.model<ISearchIndexType>('search_index', SearchIndexSchema);

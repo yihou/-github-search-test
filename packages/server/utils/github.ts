@@ -4,7 +4,7 @@ import {GraphQlResponse, RequestParameters} from '@octokit/graphql/dist-types/ty
 
 export const graphqlWithAuth = graphql.defaults({
     headers: {
-        authorization: `token ${env.parsed.GITHUB_ACCESS_TOKEN}`,
+        authorization: env.parsed.GITHUB_ACCESS_TOKEN ? `token ${env.parsed.GITHUB_ACCESS_TOKEN}` : undefined,
     },
 });
 
