@@ -2,7 +2,7 @@ const withPlugins = require('next-compose-plugins')
 const withImages = require('next-images')
 const {config} = require('dotenv');
 
-config({
+const env = config({
     path: '../../.env',
 });
 
@@ -10,6 +10,6 @@ module.exports = withPlugins([
     [withImages],
 ], {
     env: {
-        SERVER_PORT: process.env.SERVER_PORT,
+        SERVER_PORT: env.parsed.SERVER_PORT,
     },
 });

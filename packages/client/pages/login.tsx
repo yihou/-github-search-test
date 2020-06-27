@@ -1,6 +1,7 @@
 import * as React from 'react';
+import {useState} from 'react';
+import {useRouter} from 'next/router';
 import {Layout} from '../components/Layout';
-import {styled} from 'baseui';
 import {useApi} from '../hooks/useApi';
 import {FormControl} from 'baseui/form-control';
 import {Input} from 'baseui/input';
@@ -9,20 +10,18 @@ import {Button} from 'baseui/button';
 import {FlexGrid, FlexGridItem} from 'baseui/flex-grid';
 import {Container} from '../components/Container';
 import {Notification} from 'baseui/notification';
-import {useState} from 'react';
+import {setToken} from '../utils/auth';
+import {TopSpacer} from '../components/TopSpacer';
 
 interface LoginPayload {
     email: string;
     password: string;
 }
 
-export const TopSpacer = styled('div', {
-    paddingTop: '53px',
-});
-
 const Login: React.FC = () => {
     const [showError, setShowError] = useState<boolean>(false);
     const {handleSubmit, register, errors} = useForm<LoginPayload>();
+    const router = useRouter();
 
     const {callApi: login} = useApi<LoginPayload, any, any>({
         url: '/login',
@@ -33,7 +32,9 @@ const Login: React.FC = () => {
             setShowError(true);
         },
         onSuccess(response) {
-            console.log(response.data.auth_token);
+            setToken(response.data.auth_token);
+            // noinspection JSIgnoredPromiseFromCall
+            router.push('/report');
         }
     });
 
