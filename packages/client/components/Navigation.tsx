@@ -1,5 +1,5 @@
 import {Layer} from 'baseui/layer';
-import React from 'react';
+import React, {useState} from 'react';
 import {styled} from 'baseui';
 import {ALIGN, HeaderNavigation, StyledNavigationItem, StyledNavigationList} from 'baseui/header-navigation';
 import Link from 'next/link';
@@ -19,9 +19,9 @@ const NavigationWrapper = styled('div', {
 
 
 export const Navigation = () => {
-    let isAuthenticated = false;
+    let [isAuthenticated, setIsAuthenticated] = useState(false);
     useMount(() => {
-        isAuthenticated = hasToken();
+        setIsAuthenticated(hasToken());
     });
 
     const router = useRouter();
