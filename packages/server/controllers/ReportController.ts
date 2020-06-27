@@ -7,15 +7,9 @@ interface PaginationParams {
 
 export class ReportController {
     static async searchIndexList(req: Request<any, any, any, PaginationParams>, res) {
-        if (!req.query.page) {
-            res.json([]);
-
-            return;
-        }
-
         try {
-            const searchIndexList = await SearchIndex.find();
-            res.json(searchIndexList.map<string>(searchIndex => searchIndex.searchString));
+            const searchIndexList = await SearchIndex.paginate();
+            res.json(searchIndexList);
         } catch (e) {
             res.json(e);
         }
