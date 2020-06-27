@@ -3,8 +3,11 @@ import React from 'react';
 import {styled} from 'baseui';
 import {ALIGN, HeaderNavigation, StyledNavigationItem, StyledNavigationList} from 'baseui/header-navigation';
 import Link from 'next/link';
+import {useRouter} from 'next/router';
 import {Button} from 'baseui/button';
 import {Container} from './Container';
+import {hasToken, removeToken} from '../utils/auth';
+import {useMount} from 'react-use';
 
 const NavigationWrapper = styled('div', {
     boxSizing: 'border-box',
@@ -16,6 +19,19 @@ const NavigationWrapper = styled('div', {
 
 
 export const Navigation = () => {
+    let isAuthenticated = false;
+    useMount(() => {
+        isAuthenticated = hasToken();
+    });
+
+    const router = useRouter();
+
+    function handleLogout() {
+        removeToken();
+
+        // noinspection JSIgnoredPromiseFromCall
+        router.push('/login');
+    }
 
     return (
         <Layer>
@@ -28,9 +44,13 @@ export const Navigation = () => {
                         <StyledNavigationList $align={ALIGN.center} />
                         <StyledNavigationList $align={ALIGN.right}>
                             <StyledNavigationItem>
-                                <Link href="/login">
-                                    <Button size="compact">Login</Button>
-                                </Link>
+                                {isAuthenticated ? (
+                                    <Button size="compact" onClick={handleLogout}>Logout</Button>
+                                ) : (
+                                    <Link href="/login">
+                                        <Button size="compact">Login</Button>
+                                    </Link>
+                                )}
                             </StyledNavigationItem>
                         </StyledNavigationList>
                     </HeaderNavigation>

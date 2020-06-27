@@ -36,11 +36,14 @@ const Report: React.FC = () => {
                 pages: 0,
                 total: 0,
             },
+            payload: {
+                page: 1,
+            }
         },
     });
 
     return (
-        <Layout withoutHeader>
+        <Layout>
             <Container>
                 <TopSpacer/>
                 <StyledTable $gridTemplateColumns="max-content auto 200px">
