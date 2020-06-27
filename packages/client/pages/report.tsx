@@ -4,6 +4,7 @@ import {useApi} from '../hooks/useApi';
 import {Container} from '../components/Container';
 import {StyledBodyCell, StyledHeadCell, StyledTable} from 'baseui/table-grid';
 import {TopSpacer} from '../components/TopSpacer';
+import {Pagination} from 'baseui/pagination';
 
 
 interface ReportSearchItem {
@@ -22,7 +23,7 @@ interface ReportSearchList {
 }
 
 const Report: React.FC = () => {
-    const {data: searchList} = useApi<any, ReportSearchList, any>({
+    const {data: searchList, callApi: fetchList} = useApi<any, ReportSearchList, any>({
         url: '/report/search-list',
         method: 'get',
         fetchOnMount: true,
@@ -48,12 +49,23 @@ const Report: React.FC = () => {
                     <StyledHeadCell $sticky={true}>Number of results</StyledHeadCell>
                     {searchList.docs.map((item, index) => (
                         <>
-                            <StyledBodyCell>{index + 1}</StyledBodyCell>
+                            <StyledBodyCell>{(index + ((searchList.page - 1) * searchList.limit)) + 1}</StyledBodyCell>
                             <StyledBodyCell>{item.searchString}</StyledBodyCell>
                             <StyledBodyCell>{item.searchResult.length}</StyledBodyCell>
                         </>
                     ))}
                 </StyledTable>
+
+                <Pagination
+                    size="compact"
+                    numPages={searchList.pages}
+                    currentPage={searchList.page}
+                    onPageChange={({ nextPage }) => {
+                        fetchList({
+                            page: nextPage,
+                        });
+                    }}
+                />
             </Container>
         </Layout>
     );
