@@ -29,7 +29,14 @@ export class SearchController {
                     '$regex': req.query.query,
                 },
             }).limit(3);
-            res.json(searchIndexList.map<string>(searchIndex => searchIndex.searchString));
+
+            // append topic filter in suggestions
+            const searchSuggestionStringList = [];
+            searchIndexList.forEach(searchIndex => {
+                searchSuggestionStringList.push(searchIndex.searchString, `topic:${searchIndex.searchString}`);
+            });
+
+            res.json(searchSuggestionStringList);
         } catch (e) {
             res.json(e);
         }
