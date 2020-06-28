@@ -1,19 +1,22 @@
 import * as React from 'react';
 import {useState} from 'react';
 import {Layout} from '../components/Layout';
-import {styled} from 'baseui';
+import {darkThemePrimitives, styled} from 'baseui';
 import {SearchForm} from '../components/SerachForm';
 import {useApi} from '../hooks/useApi';
-import {SearchParams} from '../../../types/search';
-import {Card} from 'baseui/card';
+import {SearchParams, SearchResultGraphQLItem} from '../../../types/search';
+import {Card, StyledBody} from 'baseui/card';
 import {Container} from '../components/Container';
 import {TopSpacer} from '../components/TopSpacer';
 import {PageAction, SimplePagination} from '../components/SimplePagination';
-
-interface Node {
-    id: string;
-    name: string;
-}
+import {Cell, Grid} from 'baseui/layout-grid';
+import {Button} from 'baseui/button';
+import {Avatar} from 'baseui/avatar';
+import {FlexGrid} from 'baseui/flex-grid';
+import {Paragraph3} from 'baseui/typography';
+import {Tag} from 'baseui/tag';
+import starIcon from '../static/star.png';
+import forkIcon from '../static/fork.png';
 
 interface PageInfo {
     startCursor: string;
@@ -24,7 +27,7 @@ interface PageInfo {
 
 interface SearchApiResponse {
     repositoryCount: number;
-    nodes: Node[];
+    nodes: SearchResultGraphQLItem[];
     pageInfo: PageInfo;
 }
 
@@ -32,6 +35,12 @@ export const RepoList = styled('div', {
     marginTop: '20px',
     marginBottom: '20px',
 });
+export const TagText = styled('span', {
+    marginLeft: '5px',
+    lineHeight: '16px',
+    display: 'inline-block',
+});
+
 
 const Index: React.FC = () => {
     const [searchParams, setSearchParams] = useState<SearchParams>({query: ''});
@@ -82,7 +91,7 @@ const Index: React.FC = () => {
         } else if (action === 'next') {
             searchApi({
                 ...payload,
-                before: null,
+                before: searchResponse.pageInfo.startCursor,
                 after: searchResponse.pageInfo.endCursor,
             });
         }
@@ -92,7 +101,7 @@ const Index: React.FC = () => {
         <Layout>
             <TopSpacer/>
             <Container>
-                <SearchForm onSearch={handleOnSearch}/>
+                <SearchForm onSearch={handleOnSearch} totalSearchResult={searchResponse.repositoryCount}/>
 
                 <SimplePagination
                     hasNextPage={searchResponse.pageInfo.hasNextPage}
@@ -101,13 +110,89 @@ const Index: React.FC = () => {
                 />
 
                 <RepoList>
-                    {repositoryList.map(repo => (
-                        <div key={repo.id} style={{marginBottom: '10px'}}>
-                            <Card>
-                                {repo.name}
-                            </Card>
-                        </div>
-                    ))}
+                    <Grid gridMargins={0} gridGaps={15} gridGutters={15}>
+                        {repositoryList.map(repo => (
+                            <Cell key={repo.id} span={[2, 4, 4]}>
+                                <Card
+                                    overrides={{
+                                        Root: {
+                                            style: () => ({
+                                                height: '100%',
+                                            }),
+                                        }
+                                    }}
+                                    title={(
+                                        <FlexGrid
+                                            alignItems="center"
+                                            overrides={{
+                                                Block: {
+                                                    style: () => ({
+                                                        flexWrap: 'nowrap',
+                                                    }),
+                                                }
+                                            }}>
+                                            <a
+                                                href={repo.owner.url}
+                                                target="_blank"
+                                                style={{
+                                                    marginRight: '5px',
+                                                }}
+                                            >
+                                                <Avatar
+                                                    name={repo.owner.login}
+                                                    size="scale1000"
+                                                    src={repo.owner.avatarUrl}
+                                                />
+                                            </a>
+                                            <a
+                                                href={repo.url}
+                                                target="_blank"
+                                            >
+                                                <Button
+                                                    kind="minimal"
+                                                    overrides={{
+                                                        BaseButton: {
+                                                            style: () => ({
+                                                                textAlign: 'left',
+                                                            })
+                                                        }
+                                                    }}
+                                                >
+                                                    {repo.nameWithOwner}
+                                                </Button>
+                                            </a>
+                                        </FlexGrid>
+                                    )}
+                                >
+                                    <StyledBody>
+                                        <FlexGrid>
+                                            <Tag closeable={false}>
+                                                <img
+                                                    src={starIcon} alt="Github Star Icon"
+                                                    width="12px"
+                                                />
+                                                <TagText>
+                                                    {repo.stargazers.totalCount}
+                                                </TagText>
+                                            </Tag>
+                                            <Tag closeable={false}>
+                                                <img
+                                                    src={forkIcon} alt="Github Fork Icon"
+                                                    width="12px"
+                                                />
+                                                <TagText>
+                                                    {repo.forks.totalCount}
+                                                </TagText>
+                                            </Tag>
+                                        </FlexGrid>
+                                        <Paragraph3 color={darkThemePrimitives.mono200}>
+                                            {repo.description}
+                                        </Paragraph3>
+                                    </StyledBody>
+                                </Card>
+                            </Cell>
+                        ))}
+                    </Grid>
                 </RepoList>
             </Container>
         </Layout>

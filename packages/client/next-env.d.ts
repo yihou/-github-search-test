@@ -12,3 +12,9 @@ declare module "*.png" {
     // noinspection JSDuplicatedDeclaration
     export default content;
 }
+
+declare module "*.svg" {
+    const content: string;
+    // noinspection JSDuplicatedDeclaration
+    export default content;
+}

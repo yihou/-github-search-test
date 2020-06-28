@@ -1,11 +1,11 @@
 import {GraphQlResponse} from '@octokit/graphql/dist-types/types';
 import {githubGraphQuery} from '../utils/github';
-import {SearchItem, SearchParams} from '../../../types/search';
+import {SearchParams, SearchResultGraphQLItem} from '../../../types/search';
 
 export interface SearchResponseData {
     search: {
         repositoryCount: number;
-        nodes: SearchItem[];
+        nodes: SearchResultGraphQLItem[];
         pageInfo: {
             endCursor: string;
             hasNextPage: boolean;
@@ -28,7 +28,29 @@ export class Search {
                 ... on Repository {
                     id
                     name
-                }
+                    nameWithOwner
+                    url
+                    homepageUrl
+                    description
+                    stargazers {
+                        totalCount
+                    }
+                    owner {
+                        id
+                        avatarUrl
+                        url
+                        login
+                    }
+                    forks {
+                        totalCount
+                        totalDiskUsage
+                    }
+                    primaryLanguage {
+                        name
+                        color
+                    }
+                    createdAt
+              }
             }
             pageInfo {
               startCursor

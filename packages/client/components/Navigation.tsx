@@ -10,6 +10,7 @@ import {hasToken, removeToken} from '../utils/auth';
 import {useMount} from 'react-use';
 
 const NavigationWrapper = styled('div', {
+    background: 'white',
     boxSizing: 'border-box',
     width: '100vw',
     position: 'fixed',
@@ -41,7 +42,7 @@ export const Navigation = () => {
                         <StyledNavigationList $align={ALIGN.left}>
                             <StyledNavigationItem>
                                 <Link href="/">
-                                    Github Search Test
+                                    <Button kind="minimal" size="compact">Github Search Test</Button>
                                 </Link>
                             </StyledNavigationItem>
                         </StyledNavigationList>

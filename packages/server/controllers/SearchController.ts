@@ -71,13 +71,19 @@ export class SearchController {
         // after responded, index queries and search results
         const resultList = await Promise.all(searchResponse.search.nodes.map<Promise<ISearchResultType>>(async (node) => {
             let result = await SearchResult.findOne({
-                github_id: node.id,
+                githubId: node.id,
             });
 
             if (!result) {
                 result = await SearchResult.create({
-                    github_id: node.id,
-                    title: node.name,
+                    githubId: node.id,
+                    name: node.name,
+                    nameWithOwner: node.name,
+                    url: node.url,
+                    description: node.description,
+                    owner: node.owner,
+                    createdAt: node.createdAt,
+                    primaryLanguage: node.primaryLanguage,
                 });
             }
 

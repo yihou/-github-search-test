@@ -10,20 +10,21 @@ import {LanguageSelect} from './LanguageSelect';
 import {Cell, Grid} from 'baseui/layout-grid';
 import {styled} from 'baseui';
 
-interface SearchFormParams {
+interface SearchFormProps {
     isLoading?: boolean;
     hashId?: string;
     onSearch: (value: SearchParams) => void;
+    totalSearchResult: number;
 }
 
 export const LanguageTopSpacer = styled('div', {
     paddingTop: '33px',
 });
 
-export function SearchForm(props: SearchFormParams) {
+export function SearchForm(props: SearchFormProps) {
     const [hashId] = useState<string>(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
     const [searchStr, setSearchStr] = useState<string>('');
-    const {data: autoCompleteList, debouncedCallApi: fetchList} = useApi<SearchParams, OptionsT[], any>({
+    const {data: autoCompleteList, debouncedCallApi: fetchList, loading} = useApi<SearchParams, OptionsT[], any>({
         url: '/search-autocomplete',
         method: 'get',
         transformer(response) {
@@ -84,13 +85,23 @@ export function SearchForm(props: SearchFormParams) {
         )
     }
 
+    function searchCaption() {
+        if (loading) {
+            return 'Loading...';
+        } else if (searchStr.length === 0) {
+            return 'Start typing...';
+        }
+
+        return `${props.totalSearchResult} results.`;
+    }
+
     return (
         <form onSubmit={handleOnSubmit}>
             <Grid gridGutters={0} gridMargins={0}>
                 <Cell span={[3,6,9]}>
                     <FormControl
                         label="Search Github Repos here!!"
-                        caption="Start typing..."
+                        caption={searchCaption()}
                     >
                         <Combobox
                             value={searchStr}

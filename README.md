@@ -1,5 +1,5 @@
 # Github Search
-Github repo search engine.
+Github repo search engine, build using `Express` and `Next.js` with `Typescript` consuming `Github API v4`.
 
 ## Prerequisite
 Below are the required software to build and run the program.
