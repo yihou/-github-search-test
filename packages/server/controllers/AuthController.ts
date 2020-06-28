@@ -15,7 +15,7 @@ export class AuthController {
             });
 
             if (!user) {
-                res.status(401).send({
+                res.status(418).send({
                     success: false,
                     msg: 'Authentication failed.'
                 });
@@ -34,7 +34,7 @@ export class AuthController {
                         auth_token: token,
                     });
                 } else {
-                    res.status(401)
+                    res.status(418)
                         .json({
                             success: false,
                             msg: 'Authentication failed.'

@@ -42,6 +42,10 @@ const Login: React.FC = () => {
         setShowError(false);
     }
 
+    function handleOnFormSubmit(values) {
+        login(values);
+    }
+
     return (
         <Layout withoutHeader>
             <Container>
@@ -63,7 +67,7 @@ const Login: React.FC = () => {
                     </Notification>
                 )}
                 <TopSpacer/>
-                <form onSubmit={handleSubmit(login as any)}>
+                <form onSubmit={handleSubmit(handleOnFormSubmit)}>
                     <FlexGrid alignItems="center" justifyContent="center">
                         <FlexGridItem>
                             <FormControl label="Email" error={errors.email && errors.email.message}>

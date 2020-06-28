@@ -1,6 +1,7 @@
 import {User} from '../models/User';
 import {Strategy, ExtractJwt, StrategyOptions} from 'passport-jwt'
 import * as passport from 'passport';
+import {Response} from 'express';
 
 export function jwtStrategy() {
     const opts: StrategyOptions = {
@@ -22,17 +23,17 @@ export function jwtStrategy() {
     });
 }
 
-export function authenticate(req, res, next) {
+export function authenticate(req, res: Response, next) {
     passport.authenticate('jwt', {session: false}, (err, user) => {
         if (err) {
-            return res.json({
+            return res.status(401).json({
                 success: false,
                 message: 'Token does not match.',
             });
         }
 
         if (!user) {
-            return res.json({
+            return res.status(401).json({
                 success: false,
                 message: 'User not authorized.',
             });
