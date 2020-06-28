@@ -86,7 +86,7 @@ export function SearchForm(props: SearchFormParams) {
 
     return (
         <form onSubmit={handleOnSubmit}>
-            <Grid gridGutters={0}>
+            <Grid gridGutters={0} gridMargins={0}>
                 <Cell span={[3,6,9]}>
                     <FormControl
                         label="Search Github Repos here!!"

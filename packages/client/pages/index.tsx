@@ -1,14 +1,14 @@
 import * as React from 'react';
+import {useState} from 'react';
 import {Layout} from '../components/Layout';
 import {styled} from 'baseui';
 import {SearchForm} from '../components/SerachForm';
 import {useApi} from '../hooks/useApi';
 import {SearchParams} from '../../../types/search';
 import {Card} from 'baseui/card';
-import {useState} from 'react';
 import {Container} from '../components/Container';
 import {TopSpacer} from '../components/TopSpacer';
-import {Pagination} from 'baseui/pagination';
+import {PageAction, SimplePagination} from '../components/SimplePagination';
 
 interface Node {
     id: string;
@@ -72,30 +72,6 @@ const Index: React.FC = () => {
         startSearch(value);
     }
 
-    // handle pagination
-    function fakingPageNumber(): number {
-        if (!searchResponse.pageInfo.hasNextPage && !searchResponse.pageInfo.hasPreviousPage) {
-            return 0;
-        }
-
-        return 3;
-    }
-
-    function fakingCurrentPage(): number {
-        if (!searchResponse.pageInfo.hasPreviousPage && !searchResponse.pageInfo.hasNextPage) {
-            return null;
-        }
-        if (searchResponse.pageInfo.hasPreviousPage && searchResponse.pageInfo.hasNextPage) {
-            return 2;
-        } else if (!searchResponse.pageInfo.hasNextPage) {
-            return 3;
-        } else if (!searchResponse.pageInfo.hasPreviousPage) {
-            return 1;
-        }
-    }
-
-    type PageAction = 'next' | 'prev';
-
     function handlePageChange(action: PageAction) {
         if (action === 'prev') {
             searchApi({
@@ -118,24 +94,10 @@ const Index: React.FC = () => {
             <Container>
                 <SearchForm onSearch={handleOnSearch}/>
 
-                <Pagination
-                    size="compact"
-                    overrides={{
-                        MaxLabel: {
-                            style: () => ({
-                                display: 'none',
-                            }),
-                        },
-                        DropdownContainer: {
-                            style: () => ({
-                                display: 'none',
-                            }),
-                        },
-                    }}
-                    numPages={fakingPageNumber()}
-                    currentPage={fakingCurrentPage()}
-                    onPrevClick={() => handlePageChange('prev')}
-                    onNextClick={() => handlePageChange('next')}
+                <SimplePagination
+                    hasNextPage={searchResponse.pageInfo.hasNextPage}
+                    hasPreviousPage={searchResponse.pageInfo.hasPreviousPage}
+                    onPageChange={handlePageChange}
                 />
 
                 <RepoList>
