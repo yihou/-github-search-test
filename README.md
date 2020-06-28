@@ -68,10 +68,10 @@ harder for style inspection and debugging, hence took me sometime to get the han
 
 
 ### Things to improve
--[ ] Server side response standardisation (error messages)
--[ ] Server side handle database connection properly
--[ ] Server side graphql search caching
--[ ] Server side search handling optimizations (on indexing search results should use callbacks)
--[ ] Typings for APIs response and params to share among server side and client side
--[ ] Frontend UI/UX improvements
--[ ] Database design, to optimize the `search_indexes` table, denormalize `searchResult` column to `1 to many` relationship
+- Server side response standardisation (error messages)
+- Server side handle database connection properly
+- Server side graphql search caching
+- Server side search handling optimizations (on indexing search results should use callbacks)
+- Typings for APIs response and params to share among server side and client side
+- Frontend UI/UX improvements
+- Database design, to optimize the `search_indexes` table, denormalize `searchResult` column to `1 to many` relationship
