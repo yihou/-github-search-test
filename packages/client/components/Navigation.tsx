@@ -39,10 +39,21 @@ export const Navigation = () => {
                 <Container>
                     <HeaderNavigation>
                         <StyledNavigationList $align={ALIGN.left}>
-                            <StyledNavigationItem>Github Search Test</StyledNavigationItem>
+                            <StyledNavigationItem>
+                                <Link href="/">
+                                    Github Search Test
+                                </Link>
+                            </StyledNavigationItem>
                         </StyledNavigationList>
-                        <StyledNavigationList $align={ALIGN.center} />
+                        <StyledNavigationList $align={ALIGN.center}/>
                         <StyledNavigationList $align={ALIGN.right}>
+                            {isAuthenticated && (
+                                <StyledNavigationItem>
+                                    <Link href="/report">
+                                        <Button size="compact">Report</Button>
+                                    </Link>
+                                </StyledNavigationItem>
+                            )}
                             <StyledNavigationItem>
                                 {isAuthenticated ? (
                                     <Button size="compact" onClick={handleLogout}>Logout</Button>

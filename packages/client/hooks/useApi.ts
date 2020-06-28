@@ -112,6 +112,9 @@ export function useApi<Payload, Data, Response>({
         data,
         setData,
 
+        payload,
+        setPayload,
+
         error,
         setError,
 

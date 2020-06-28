@@ -2,7 +2,7 @@ import {GraphQlResponse} from '@octokit/graphql/dist-types/types';
 import {githubGraphQuery} from '../utils/github';
 import {SearchItem, SearchParams} from '../../../types/search';
 
-interface SearchResponseData {
+export interface SearchResponseData {
     search: {
         repositoryCount: number;
         nodes: SearchItem[];
@@ -15,11 +15,12 @@ interface SearchResponseData {
 }
 
 export class Search {
-    searchQuery = `query searchRepos($searchStr: String!, $first: Int!, $after: String) {
+    searchQuery = `query searchRepos($searchStr: String!, $first: Int!, $before: String, $after: String) {
         search(
             query: $searchStr,
             type: REPOSITORY,
             first: $first,
+            before: $before,
             after: $after
         ) {
             repositoryCount
@@ -30,6 +31,7 @@ export class Search {
                 }
             }
             pageInfo {
+              startCursor
               endCursor
               hasNextPage
               hasPreviousPage
@@ -50,7 +52,8 @@ export class Search {
             query: this.searchQuery,
             searchStr: this.searchStringConstructor(params),
             first: 10,
-            after: null,
+            before: params.before,
+            after: params.after,
         });
     }
 }
