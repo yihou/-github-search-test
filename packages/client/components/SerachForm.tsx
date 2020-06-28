@@ -4,13 +4,21 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {useApi} from '../hooks/useApi';
 import {SearchParams} from '../../../types/search';
-import {OptionsT} from 'baseui/select';
+import {OnChangeParams, OptionsT, Value} from 'baseui/select';
+import {Tag} from 'baseui/tag';
+import {LanguageSelect} from './LanguageSelect';
+import {Cell, Grid} from 'baseui/layout-grid';
+import {styled} from 'baseui';
 
 interface SearchFormParams {
     isLoading?: boolean;
     hashId?: string;
     onSearch: (value: string) => void;
 }
+
+export const LanguageTopSpacer = styled('div', {
+    paddingTop: '33px',
+});
 
 export function SearchForm(props: SearchFormParams) {
     const [hashId] = useState<string>(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
@@ -51,23 +59,53 @@ export function SearchForm(props: SearchFormParams) {
         });
     }
 
+    function mapOptionToNode({option}) {
+        return (
+            <div>
+                {option.label}
+                {option.label.indexOf('topic:') === 0 && (
+                    <Tag closeable={false} kind="accent">topic</Tag>
+                )}
+            </div>
+        )
+    }
+
+    // language select
+    const [selectedLanguage, setSelectedLanguage] = useState<Value>();
+
+    function handleOnSelect(param: OnChangeParams) {
+        setSelectedLanguage(param.value);
+    }
+
     return (
         <form onSubmit={handleOnSubmit}>
-            <FormControl
-                label="Search Github Repos here!!"
-                caption="Start typing..."
-            >
-                <Combobox
-                    value={searchStr}
-                    onChange={handleOnChange}
-                    mapOptionToString={(option) => option.label}
-                    mapOptionToNode={({option}) => option.label}
-                    options={autoCompleteList}
-                    name={`repo_search_${hashId}`}
-                    size="compact"
-                    autocomplete={false}
-                />
-            </FormControl>
+            <Grid gridGutters={0}>
+                <Cell span={[3,6,9]}>
+                    <FormControl
+                        label="Search Github Repos here!!"
+                        caption="Start typing..."
+                    >
+                        <Combobox
+                            value={searchStr}
+                            onChange={handleOnChange}
+                            mapOptionToString={(option) => option.label}
+                            mapOptionToNode={mapOptionToNode}
+                            options={autoCompleteList}
+                            name={`repo_search_${hashId}`}
+                            autocomplete={false}
+                        />
+                    </FormControl>
+                </Cell>
+                <Cell span={[1,2,3]}>
+                    <LanguageTopSpacer/>
+                    <FormControl>
+                        <LanguageSelect
+                            value={selectedLanguage}
+                            onSelect={handleOnSelect}
+                        />
+                    </FormControl>
+                </Cell>
+            </Grid>
         </form>
     )
 }

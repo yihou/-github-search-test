@@ -5,11 +5,7 @@ import {SearchForm} from '../components/SerachForm';
 import {useApi} from '../hooks/useApi';
 import {SearchParams} from '../../../types/search';
 import {Card} from 'baseui/card';
-import {Cell, Grid} from 'baseui/layout-grid';
-import {OnChangeParams, Value} from 'baseui/select';
 import {useState} from 'react';
-import {Checkbox} from 'baseui/checkbox';
-import {LanguageSelect} from '../components/LanguageSelect';
 import {Container} from '../components/Container';
 import {TopSpacer} from '../components/TopSpacer';
 import {Pagination} from 'baseui/pagination';
@@ -39,7 +35,6 @@ export const RepoList = styled('div', {
 
 const Index: React.FC = () => {
     const [searchParams, setSearchParams] = useState<SearchParams>({query: ''});
-    const [selectedLanguage, setSelectedLanguage] = useState<Value>();
 
     const {
         data: searchResponse,
@@ -73,13 +68,8 @@ const Index: React.FC = () => {
         debouncedSearchApi(newSearchParams);
     }
 
-
     function handleOnSearch(value: string) {
         startSearch({query: value});
-    }
-
-    function handleOnSelect(param: OnChangeParams) {
-        setSelectedLanguage(param.value);
     }
 
     // handle pagination
@@ -107,7 +97,6 @@ const Index: React.FC = () => {
     type PageAction = 'next' | 'prev';
 
     function handlePageChange(action: PageAction) {
-        console.log(action);
         if (action === 'prev') {
             searchApi({
                 ...payload,
@@ -127,60 +116,37 @@ const Index: React.FC = () => {
         <Layout>
             <TopSpacer/>
             <Container>
-                <Grid>
-                    <Cell span={[1, 2, 3]}>
-                        <div>
-                            <h3 style={{marginTop: 8}}>Search by: </h3>
-                            <label style={{display: 'flex'}}>
-                                <Checkbox/>
-                                <span>Topic</span>
-                            </label>
+                <SearchForm onSearch={handleOnSearch}/>
+
+                <Pagination
+                    size="compact"
+                    overrides={{
+                        MaxLabel: {
+                            style: () => ({
+                                display: 'none',
+                            }),
+                        },
+                        DropdownContainer: {
+                            style: () => ({
+                                display: 'none',
+                            }),
+                        },
+                    }}
+                    numPages={fakingPageNumber()}
+                    currentPage={fakingCurrentPage()}
+                    onPrevClick={() => handlePageChange('prev')}
+                    onNextClick={() => handlePageChange('next')}
+                />
+
+                <RepoList>
+                    {repositoryList.map(repo => (
+                        <div key={repo.id} style={{marginBottom: '10px'}}>
+                            <Card>
+                                {repo.name}
+                            </Card>
                         </div>
-                        <div style={{display: 'flex'}}>
-                            <Checkbox/>
-                            <div style={{width: '100%'}}>
-                                <LanguageSelect
-                                    value={selectedLanguage}
-                                    onSelect={handleOnSelect}
-                                />
-                            </div>
-                        </div>
-                    </Cell>
-                    <Cell span={[3, 6, 9]}>
-                        <SearchForm onSearch={handleOnSearch}/>
-
-                        <Pagination
-                            size="compact"
-                            overrides={{
-                                MaxLabel: {
-                                    style: () => ({
-                                        display: 'none',
-                                    }),
-                                },
-                                DropdownContainer: {
-                                    style: () => ({
-                                        display: 'none',
-                                    }),
-                                },
-                            }}
-                            numPages={fakingPageNumber()}
-                            currentPage={fakingCurrentPage()}
-                            onPrevClick={() => handlePageChange('prev')}
-                            onNextClick={() => handlePageChange('next')}
-                        />
-
-                        <RepoList>
-                            {repositoryList.map(repo => (
-                                <div key={repo.id} style={{marginBottom: '10px'}}>
-                                    <Card>
-                                        {repo.name}
-                                    </Card>
-                                </div>
-                            ))}
-                        </RepoList>
-                    </Cell>
-                </Grid>
-
+                    ))}
+                </RepoList>
             </Container>
         </Layout>
     );

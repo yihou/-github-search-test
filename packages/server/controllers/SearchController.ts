@@ -33,7 +33,9 @@ export class SearchController {
             // append topic filter in suggestions
             const searchSuggestionStringList = [];
             searchIndexList.forEach(searchIndex => {
-                searchSuggestionStringList.push(searchIndex.searchString, `topic:${searchIndex.searchString}`);
+                if (searchIndex.searchString.indexOf('topic:') !== 0) {
+                    searchSuggestionStringList.push(searchIndex.searchString, `topic:${searchIndex.searchString}`);
+                }
             });
 
             res.json(searchSuggestionStringList);
