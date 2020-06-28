@@ -68,8 +68,8 @@ const Index: React.FC = () => {
         debouncedSearchApi(newSearchParams);
     }
 
-    function handleOnSearch(value: string) {
-        startSearch({query: value});
+    function handleOnSearch(value: SearchParams) {
+        startSearch(value);
     }
 
     // handle pagination

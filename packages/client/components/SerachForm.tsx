@@ -13,7 +13,7 @@ import {styled} from 'baseui';
 interface SearchFormParams {
     isLoading?: boolean;
     hashId?: string;
-    onSearch: (value: string) => void;
+    onSearch: (value: SearchParams) => void;
 }
 
 export const LanguageTopSpacer = styled('div', {
@@ -37,13 +37,27 @@ export function SearchForm(props: SearchFormParams) {
         }
     });
 
+    // language select
+    const [selectedLanguage, setSelectedLanguage] = useState<Value>([]);
+
+    function handleOnSelect(param: OnChangeParams) {
+        setSelectedLanguage(param.value);
+    }
+
+
     useEffect(() => {
-        props.onSearch(searchStr);
-    }, [searchStr])
+        props.onSearch({
+            query: searchStr,
+            language: (selectedLanguage[0] || {}).id as string,
+        });
+    }, [searchStr, selectedLanguage])
 
     function handleOnSubmit(e) {
         e.preventDefault();
-        props.onSearch(searchStr);
+        props.onSearch({
+            query: searchStr,
+            language: (selectedLanguage[0] || {}).id as string,
+        });
     }
 
     function handleOnChange(value) {
@@ -68,13 +82,6 @@ export function SearchForm(props: SearchFormParams) {
                 )}
             </div>
         )
-    }
-
-    // language select
-    const [selectedLanguage, setSelectedLanguage] = useState<Value>();
-
-    function handleOnSelect(param: OnChangeParams) {
-        setSelectedLanguage(param.value);
     }
 
     return (
